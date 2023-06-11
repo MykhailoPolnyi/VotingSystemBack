@@ -1,4 +1,4 @@
 package ua.lviv.iot.model.election;
 
-public class ElectionAnalysysDto {
+public class ElectionAnalysisDto {
 }
