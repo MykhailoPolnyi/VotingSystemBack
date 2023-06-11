@@ -34,7 +34,7 @@ public class UserMapper {
                 .phoneNumber(dto.getPhoneNumber())
                 .birthDate(dto.getBirthDate())
                 .address(address)
-                .sex(sexFromInt(dto.getSex()))
+                .sex(Sex.valueOf(dto.getSex()))
                 .build();
     }
 
@@ -44,13 +44,5 @@ public class UserMapper {
                 .user(toEntity(dto))
                 .password(dto.getPassword())
                 .build();
-    }
-
-    private static Sex sexFromInt(Integer value) {
-        if (value > Sex.values().length) {
-            return null;
-        } else {
-            return Sex.values()[value];
-        }
     }
 }
