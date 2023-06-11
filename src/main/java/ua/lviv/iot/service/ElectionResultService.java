@@ -19,22 +19,27 @@ public class ElectionResultService {
     private final ElectionAnalyzer electionAnalyzer;
 
     public ElectionResultDto getElectionResult(Integer electionId, Integer userId) {
+        // TODO Implement method
         return null;
     }
 
     public ElectionAnalysisDto getElectionAnalysis(Integer electionId) {
+        // TODO Implement method
         return null;
     }
 
     public VoteDto addVote(VoteDto vote) {
+        // TODO Implement method
         return null;
     }
 
     public Boolean removeVote(Integer electionId, Integer userId) {
+        // TODO Implement method
         return null;
     }
 
     private Boolean validateVoting(VoteDto voteDto) {
+        // TODO Implement method
         return null;
     }
 }

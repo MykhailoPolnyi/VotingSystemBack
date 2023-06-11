@@ -22,26 +22,32 @@ public class ElectionService {
     private final ElectionResultRepository electionResultRepository;
 
     public List<ElectionDto> getAllElectionList() {
+        // TODO Implement method
         return null;
     }
 
     public List<ElectionDto> getElectionListByActiveStatus(Boolean isActive) {
+        // TODO Implement method
         return null;
     }
 
     public DetailedElectionDto findElectionById(Integer id) {
+        // TODO Implement method
         return null;
     }
 
     public DetailedElectionDto createElection(DetailedElectionDto electionDto) {
+        // TODO Implement method
         return null;
     }
 
     public DetailedElectionDto updateElection(DetailedElectionDto electionDto) {
+        // TODO Implement method
         return null;
     }
 
     public Boolean deleteElection(Integer id) {
+        // TODO Implement method
         return null;
     }
   }

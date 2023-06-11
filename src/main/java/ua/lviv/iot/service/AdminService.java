@@ -13,6 +13,7 @@ public class AdminService {
     private final AdminRepository adminRepository;
 
     public Boolean isUserAdmin(Integer userId) {
+        // TODO Implement class
         return null;
     }
 }
