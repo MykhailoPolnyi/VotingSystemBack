@@ -55,7 +55,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserCred loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userRepository.findByIdentityCode(username).orElseThrow(
                 () -> new UsernameNotFoundException("Cannot find user with identity code: " + username)
         );
