@@ -15,11 +15,10 @@ import java.util.Collection;
 @Builder
 public class UserCred implements UserDetails {
     @NonNull
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @PrimaryKeyJoinColumn
     private User user;
 
-    @NonNull
     @Column(nullable = false)
     private String password;
 

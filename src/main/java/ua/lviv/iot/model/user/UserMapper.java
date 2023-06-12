@@ -4,7 +4,6 @@ import ua.lviv.iot.model.address.Address;
 import ua.lviv.iot.model.address.AddressDto;
 import ua.lviv.iot.model.address.AddressMapper;
 import ua.lviv.iot.model.user.cred.UserCred;
-import ua.lviv.iot.model.user.cred.UserCredDto;
 
 public class UserMapper {
     private UserMapper() {}
@@ -38,10 +37,10 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserCred toCred(UserCredDto dto) {
+    public static UserCred toCred(User user, String password) {
         return UserCred.builder()
-                .user(toEntity(dto))
-                .password(dto.getPassword())
+                .user(user)
+                .password(password)
                 .build();
     }
 }
