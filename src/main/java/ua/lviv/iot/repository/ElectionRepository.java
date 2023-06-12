@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ua.lviv.iot.model.election.Election;
 
 @Repository
-public interface ElectionRepository extends JpaRepository<Election, Long> {
+public interface ElectionRepository extends JpaRepository<Election, Integer> {
 }

@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ua.lviv.iot.model.user.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 }
