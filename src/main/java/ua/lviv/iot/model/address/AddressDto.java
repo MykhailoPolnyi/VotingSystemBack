@@ -7,7 +7,7 @@ import lombok.NonNull;
 @Data
 @Builder
 public class AddressDto {
-    private Long id;
+    private Integer id;
     private String homeAddress;
     private String city;
     private String district;
