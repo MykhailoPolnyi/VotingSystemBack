@@ -39,7 +39,6 @@ public class UserMapper {
     }
 
     public static UserCred toCred(UserCredDto dto) {
-        Address address = AddressMapper.toEntity(dto.getAddress());
         return UserCred.builder()
                 .user(toEntity(dto))
                 .password(dto.getPassword())
