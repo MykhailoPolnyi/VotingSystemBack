@@ -28,7 +28,7 @@ public class Election {
     private LocalityType localityType;
     @ManyToOne
     @JoinColumn(name = "address_id")
-    private Address address;
+    private Address localityAddress;
     @Builder.Default
     @Column(nullable = false)
     private Boolean hasRetract = false;

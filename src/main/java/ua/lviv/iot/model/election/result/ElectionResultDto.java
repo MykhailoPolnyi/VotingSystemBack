@@ -8,6 +8,6 @@ import java.util.HashMap;
 @Data
 @Builder
 public class ElectionResultDto {
-    private HashMap<Integer, Integer> candidateVoteMap;
+    private HashMap<Integer, Integer> candidateVoteNumberMap;
     private HashMap<Integer, Integer> userChoiceMap;
 }

@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @SuperBuilder
 public class UserDto {
-    protected Long id;
+    protected Integer id;
     @NonNull
     protected String firstName;
     @NonNull

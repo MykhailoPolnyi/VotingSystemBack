@@ -4,5 +4,13 @@ public enum LocalityType {
     DISTRICT,
     CITY,
     STATE,
-    NATIONAL
+    NATIONAL;
+
+    public static LocalityType valueOf(Integer value) {
+        if (value > values().length) {
+            return null;
+        } else {
+            return values()[value];
+        }
+    }
 }
