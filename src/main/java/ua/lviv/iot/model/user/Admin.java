@@ -1,17 +1,24 @@
 package ua.lviv.iot.model.user;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import ua.lviv.iot.model.election.Election;
 
+import javax.persistence.*;
 import java.util.List;
 
-@Data
-@SuperBuilder
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class Admin extends User {
-    private List<Election> ownedElectionList;
+@Entity
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Admin{
+    @Id
+    @Column(name = "user_id")
+    private Integer id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+    @OneToMany(mappedBy = "admin")
+    private List<Election> ownedElectionAssociationList;
 }

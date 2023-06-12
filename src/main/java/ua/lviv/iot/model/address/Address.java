@@ -1,13 +1,18 @@
 package ua.lviv.iot.model.address;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
-@Data
+import javax.persistence.*;
+
+@Entity
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
-    private Long id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String homeAddress;
     private String city;
     private String district;

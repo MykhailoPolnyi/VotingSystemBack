@@ -34,14 +34,14 @@ public class ElectionController {
         return null;
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{id}/result")
     public ResponseEntity<ElectionResultDto> getElectionResult(@PathVariable Integer id,
                                                                @RequestParam Integer userId){
         // TODO Implement method
         return null;
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{id}/analysis")
     public ResponseEntity<ElectionAnalysisDto> getElectionAnalysis(@PathVariable Integer id) {
         // TODO Implement method
         return null;
