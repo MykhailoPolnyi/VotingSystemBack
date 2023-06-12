@@ -2,9 +2,9 @@ package ua.lviv.iot.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.annotation.ApplicationScope;
@@ -27,14 +27,14 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
     private final UserCredRepository userCredRepository;
+    private final PasswordEncoder encoder;
 
     @Transactional
-    public UserDto createUser(UserCredDto userDto) {
+    public void createUser(UserCredDto userDto) {
         final var user = UserMapper.toEntity(userDto);
         final var createdUser = userRepository.save(user);
-        final var userCred = UserMapper.toCred(createdUser, userDto.getPassword());
+        final var userCred = UserMapper.toCred(createdUser, encoder.encode(userDto.getPassword()));
         userCredRepository.save(userCred);
-        return UserMapper.toDto(createdUser);
     }
 
     public UserDto findUser(Integer id) {
@@ -52,6 +52,10 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    public boolean userExists(String identityCode) {
+        return userRepository.existsByIdentityCode(identityCode);
     }
 
     @Override
