@@ -20,7 +20,7 @@ import ua.lviv.iot.security.jwt.AuthTokenFilter;
 import ua.lviv.iot.service.UserService;
 
 @Configuration
-@EnableGlobalMethodSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final UserService userService;
@@ -57,9 +57,9 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeRequests(auth ->
-                        auth.requestMatchers(SIGN_MATCHER).permitAll()
-                                .requestMatchers(GENERAL_MATCHER).permitAll().anyRequest().authenticated()
+                .authorizeRequests(auth -> auth
+                        .requestMatchers(SIGN_MATCHER).permitAll()
+                        .requestMatchers().permitAll().anyRequest().authenticated()
                 );
 
         http.authenticationProvider(authenticationProvider());
@@ -69,11 +69,9 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    private final RequestMatcher GENERAL_MATCHER = request -> GENERAL_MATCHING_PATH.equals(request.getContextPath());
     private final RequestMatcher SIGN_MATCHER =
-            request -> SIGN_IN_PATH.equals(request.getContextPath()) || SIGN_UP_PATH.equals(request.getContextPath());
+            request -> SIGN_IN_PATH.equals(request.getServletPath()) || SIGN_UP_PATH.equals(request.getServletPath());
 
-    private static final String GENERAL_MATCHING_PATH = "/**";
     private static final String SIGN_IN_PATH = "/signin";
     private static final String SIGN_UP_PATH = "/signup";
 }
