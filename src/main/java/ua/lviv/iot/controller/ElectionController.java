@@ -28,7 +28,8 @@ public class ElectionController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<DetailedElectionDto> getElectionById(@PathVariable Integer id) {
-        DetailedElectionDto election = electionService.findElectionById(id);
+        Integer userId = 1; // TODO Get userId from JWT token
+        DetailedElectionDto election = electionService.findElectionById(id, userId);
         if (election != null) {
             return ResponseEntity.ok(election);
         } else {

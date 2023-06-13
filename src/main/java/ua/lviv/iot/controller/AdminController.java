@@ -19,9 +19,9 @@ public class AdminController {
     private final AdminService adminService;
     private final ElectionService electionService;
 
-    @GetMapping(path = "/created/{adminId}")
-    public ResponseEntity<List<ElectionDto>> getCreatedElectionList(@PathVariable Integer adminId) {
-        List<ElectionDto> createdElections = adminService.getCreatedElectionList(adminId);
+    @GetMapping(path = "/editable/{adminId}")
+    public ResponseEntity<List<ElectionDto>> getEditableElectionList(@PathVariable Integer adminId) {
+        List<ElectionDto> createdElections = electionService.getEditableElectionList(adminId);
         return ResponseEntity.ok(createdElections);
     }
 
@@ -34,9 +34,17 @@ public class AdminController {
 
     @PutMapping("/{electionId}")
     public ResponseEntity<DetailedElectionDto> editElection(@RequestBody DetailedElectionDto electionDto,
-                                                            @PathVariable Integer electionId,
-                                                            @RequestParam Integer adminId) {
-        DetailedElectionDto editedElection = electionService.updateElection(electionDto, electionId, adminId);
+                                                            @PathVariable Integer electionId) {
+        Integer adminId = 1; // TODO Get adminId from JWT token
+        if (adminService.canAdminEditElection(adminId, electionId)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        if (!electionDto.getId().equals(electionId)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        DetailedElectionDto editedElection = electionService.updateElection(electionDto);
         if (editedElection != null) {
             return ResponseEntity.ok(editedElection);
         } else {

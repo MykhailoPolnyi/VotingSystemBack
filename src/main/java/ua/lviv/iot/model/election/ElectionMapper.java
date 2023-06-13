@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ElectionMapper {
-    public static DetailedElectionDto toDetailedDto(Election election, ElectionResultDto electionResultDto, Integer votesCount) {
+    public static DetailedElectionDto toDetailedDto(Election election,
+                                                    ElectionResultDto electionResultDto,
+                                                    Integer voteCount) {
         var localityAddressDto = AddressMapper
                 .toDto(election.getLocalityAddress());
         var candidateDto = CandidateMapper
@@ -19,7 +21,7 @@ public class ElectionMapper {
                 .id(election.getId())
                 .name(election.getName())
                 .description(election.getDescription())
-                .votesCount(votesCount)
+                .voteCount(voteCount)
                 .availableVotes(election.getAvailableVotes())
                 .localityType(election.getLocalityType().ordinal())
                 .localityAddress(localityAddressDto)
@@ -63,10 +65,10 @@ public class ElectionMapper {
     }
 
     public static List<ElectionDto> toDtoList(List<Election> electionList,
-                                              Map<Integer, Integer> electionVoteNumberMap) {
+                                              Map<Integer, Integer> electionVoteCountMap) {
         var electionDtoList = new ArrayList<ElectionDto>();
         for (var election : electionList) {
-            var electionDto = toDto(election, electionVoteNumberMap.get(election.getId()));
+            var electionDto = toDto(election, electionVoteCountMap.get(election.getId()));
             electionDtoList.add(electionDto);
         }
         return electionDtoList;
@@ -79,7 +81,7 @@ public class ElectionMapper {
                 .id(election.getId())
                 .name(election.getName())
                 .description(election.getDescription())
-                .votesCount(votesCount)
+                .voteCount(votesCount)
                 .availableVotes(election.getAvailableVotes())
                 .localityType(election.getLocalityType().ordinal())
                 .localityAddress(localityAddress)

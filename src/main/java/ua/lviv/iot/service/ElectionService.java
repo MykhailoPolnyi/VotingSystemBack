@@ -4,50 +4,94 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.ApplicationScope;
 import ua.lviv.iot.model.election.DetailedElectionDto;
+import ua.lviv.iot.model.election.Election;
 import ua.lviv.iot.model.election.ElectionDto;
-import ua.lviv.iot.repository.CandidateRepository;
+import ua.lviv.iot.model.election.ElectionMapper;
+import ua.lviv.iot.model.election.result.ElectionResultMapper;
 import ua.lviv.iot.repository.ElectionRepository;
 import ua.lviv.iot.repository.ElectionResultRepository;
-import ua.lviv.iot.repository.UserRepository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
 @ApplicationScope
 @RequiredArgsConstructor
 public class ElectionService {
-    private final UserRepository userService;
-    private final ElectionRepository electionService;
-    private final CandidateRepository candidateRepository;
+    private final ElectionRepository electionRepository;
     private final ElectionResultRepository electionResultRepository;
 
     public List<ElectionDto> getAllElectionList() {
-        // TODO Implement method
-        return null;
+        var electionList = electionRepository.findAll();
+        var electionVoteNumberMap = getElectionVoteCountMap(electionList);
+
+        return ElectionMapper.toDtoList(electionList, electionVoteNumberMap);
     }
 
     public List<ElectionDto> getElectionListByActiveStatus(Boolean isActive) {
-        // TODO Implement method
-        return null;
+        List<Election> electionList;
+        if (isActive) {
+            electionList = electionRepository.findActiveElectionList();
+        } else {
+            electionList = electionRepository.findClosedElectionList();
+        }
+        var electionVoteCountMap = getElectionVoteCountMap(electionList);
+
+        return ElectionMapper.toDtoList(electionList, electionVoteCountMap);
     }
 
-    public DetailedElectionDto findElectionById(Integer id) {
-        // TODO Implement method
-        return null;
+    public List<ElectionDto> getEditableElectionList(Integer adminId) {
+
+        var electionList = electionRepository.findEditableElectionList(adminId);
+        var electionVoteNumberMap = getElectionVoteCountMap(electionList);
+
+        return ElectionMapper.toDtoList(electionList, electionVoteNumberMap);
+    }
+
+    public DetailedElectionDto findElectionById(Integer id, Integer userId) {
+        var election = electionRepository.findById(id).orElse(null);
+        if (election == null) {
+            return null;
+        }
+
+        var electionResultList = electionResultRepository.findAllByElectionId(id);
+        var electionResultDto = ElectionResultMapper.toDto(electionResultList, userId);
+
+        var voteCount = electionResultRepository.countVoteByElectionId(id);
+
+        return ElectionMapper.toDetailedDto(election, electionResultDto, voteCount);
     }
 
     public DetailedElectionDto createElection(DetailedElectionDto electionDto) {
-        // TODO Implement method
-        return null;
+        var election = ElectionMapper.toEntity(electionDto);
+        electionRepository.save(election);
+        return electionDto;
     }
 
-    public DetailedElectionDto updateElection(DetailedElectionDto electionDto, Integer electionId, Integer adminId) {
-        // TODO Implement method
-        return null;
+    public DetailedElectionDto updateElection(DetailedElectionDto electionDto) {
+        if (!electionRepository.existsById(electionDto.getId())) {
+            return null;
+        }
+
+        var election = ElectionMapper.toEntity(electionDto);
+        electionRepository.save(election);
+        return electionDto;
     }
 
     public Boolean deleteElection(Integer id) {
-        // TODO Implement method
-        return null;
+        if (!electionRepository.existsById(id)) {
+            return null;
+        }
+        electionRepository.deleteById(id);
+        return true;
     }
-  }
+
+    private HashMap<Integer, Integer> getElectionVoteCountMap(List<Election> electionList) {
+        var electionVoteNumberMap = new HashMap<Integer, Integer>();
+        for (var election : electionList) {
+            var voteCount = electionResultRepository.countVoteByElectionId(election.getId());
+            electionVoteNumberMap.put(election.getId(), voteCount);
+        }
+        return electionVoteNumberMap;
+    }
+}

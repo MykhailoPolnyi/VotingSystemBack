@@ -1,28 +1,37 @@
 package ua.lviv.iot.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.ApplicationScope;
-import ua.lviv.iot.model.election.ElectionDto;
 import ua.lviv.iot.repository.AdminRepository;
-
-import java.util.List;
+import ua.lviv.iot.repository.ElectionRepository;
 
 @Service
 @ApplicationScope
 @RequiredArgsConstructor
 public class AdminService {
     private final AdminRepository adminRepository;
+    private final ElectionRepository electionRepository;
 
     public Boolean isUserAdmin(Integer userId) {
-        // TODO Implement class
-        return null;
+        return adminRepository.existsById(userId);
     }
 
-    public List<ElectionDto> getCreatedElectionList(Integer adminId) {
-        // TODO Implement method
-        return null;
-//        return adminRepository.getCreatedElectionList(adminId);
+    public Boolean canAdminEditElection(Integer adminId, Integer electionId) {
+        if (isUserAdmin(adminId)) {
+           return false;
+        }
+
+        var electionList = electionRepository.findEditableElectionList(adminId);
+        var election = electionList.stream()
+                .filter(e -> e.getId().equals(electionId))
+                .findFirst()
+                .orElse(null);
+
+        if (election == null){
+            return false;
+        }
+
+        return true;
     }
 }
