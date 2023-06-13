@@ -9,5 +9,4 @@ public class LoginResponseDto {
     private String jwt;
     private Integer id;
     private Boolean isAdmin;
-    private String type;
 }

@@ -30,9 +30,12 @@ public class AccessController {
     @PostMapping(path = "/signup")
     public ResponseEntity<LoginResponseDto> register(@RequestBody UserCredDto userCredDto) {
         if (userService.userExists(userCredDto.getIdentityCode())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.unprocessableEntity().build();
         }
 
+        if (isUserCredInvalid(userCredDto)) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
         userService.createUser(userCredDto);
 
         var authResult = authenticate(userCredDto.getIdentityCode(), userCredDto.getPassword());
@@ -62,7 +65,16 @@ public class AccessController {
                 .jwt(jwt)
                 .id(userCred.getUser().getId())
                 .isAdmin(isAdmin)
-                .type("Bearer")
                 .build();
+    }
+
+    private boolean isUserCredInvalid(UserCredDto userCredDto) {
+        return userCredDto == null ||
+                userCredDto.getPassword() == null ||
+                userCredDto.getFirstName() == null ||
+                userCredDto.getSecondName() == null ||
+                userCredDto.getIdentityCode() == null ||
+                userCredDto.getAddress() == null ||
+                userCredDto.getBirthDate() == null;
     }
 }

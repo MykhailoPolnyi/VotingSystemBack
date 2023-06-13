@@ -1,12 +1,15 @@
 package ua.lviv.iot.model.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import ua.lviv.iot.model.address.Address;
 import ua.lviv.iot.model.election.result.ElectionResult;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -27,10 +30,10 @@ public class User {
     protected String identityCode;
     @Column(length = 40)
     protected String emailAddress;
-    @Column(length = 10)
+    @Column(length = 16)
     protected String phoneNumber;
     @Column(nullable = false)
-    protected Date birthDate;
+    protected LocalDate birthDate;
     @ManyToOne
     @JoinColumn(nullable = false, name = "address_id")
     protected Address address;

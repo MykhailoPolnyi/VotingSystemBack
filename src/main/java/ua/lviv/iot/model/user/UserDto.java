@@ -1,30 +1,28 @@
 package ua.lviv.iot.model.user;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import ua.lviv.iot.model.address.AddressDto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class UserDto {
     protected Integer id;
-    @NonNull
     protected String firstName;
-    @NonNull
     protected String secondName;
-    @NonNull
     protected String identityCode;
-    @NonNull
     protected String email;
-    @NonNull
     protected String phoneNumber;
-    @NonNull
-    protected Date birthDate;
-    @NonNull
+    protected LocalDate birthDate;
     protected AddressDto address;
     protected Integer sex;
 }

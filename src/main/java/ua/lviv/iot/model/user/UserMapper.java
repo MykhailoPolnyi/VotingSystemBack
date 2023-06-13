@@ -25,11 +25,11 @@ public class UserMapper {
         Address address = AddressMapper.toEntity(dto.getAddress());
         return User.builder()
                 .id(dto.getId())
-                .firstName(dto.getFirstName())
-                .secondName(dto.getSecondName())
-                .identityCode(dto.getIdentityCode())
-                .emailAddress(dto.getEmail())
-                .phoneNumber(dto.getPhoneNumber())
+                .firstName(dto.getFirstName().strip())
+                .secondName(dto.getSecondName().strip())
+                .identityCode(dto.getIdentityCode().strip())
+                .emailAddress(dto.getEmail().strip())
+                .phoneNumber(dto.getPhoneNumber().strip())
                 .birthDate(dto.getBirthDate())
                 .address(address)
                 .sex(Sex.valueOf(dto.getSex()))
@@ -38,6 +38,7 @@ public class UserMapper {
 
     public static UserCred toCred(User user, String password) {
         return UserCred.builder()
+                .id(user.getId())
                 .user(user)
                 .password(password)
                 .build();

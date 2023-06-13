@@ -13,6 +13,7 @@ import ua.lviv.iot.model.user.UserMapper;
 import ua.lviv.iot.model.user.cred.Authorities;
 import ua.lviv.iot.model.user.cred.UserCred;
 import ua.lviv.iot.model.user.cred.UserCredDto;
+import ua.lviv.iot.repository.AddressRepository;
 import ua.lviv.iot.repository.AdminRepository;
 import ua.lviv.iot.repository.UserCredRepository;
 import ua.lviv.iot.repository.UserRepository;
@@ -26,12 +27,15 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
+    private final AddressRepository addressRepository;
     private final UserCredRepository userCredRepository;
     private final PasswordEncoder encoder;
 
     @Transactional
     public void createUser(UserCredDto userDto) {
         final var user = UserMapper.toEntity(userDto);
+        final var savedAddress = addressRepository.save(user.getAddress());
+        user.setAddress(savedAddress);
         final var createdUser = userRepository.save(user);
         final var userCred = UserMapper.toCred(createdUser, encoder.encode(userDto.getPassword()));
         userCredRepository.save(userCred);
@@ -51,6 +55,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void deleteUser(Integer id) {
+        userCredRepository.deleteById(id);
         userRepository.deleteById(id);
     }
 
@@ -60,21 +65,22 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserCred loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByIdentityCode(username).orElseThrow(
+        final var user = userRepository.findByIdentityCode(username).orElseThrow(
                 () -> new UsernameNotFoundException("Cannot find user with identity code: " + username)
         );
 
-        var userPassword = userCredRepository.findById(user.getId()).orElseThrow(
+        final var userPassword = userCredRepository.findById(user.getId()).orElseThrow(
                 () -> new UsernameNotFoundException("User info saved, but no credentials found for name: " + username)
         ).getPassword();
 
         List<GrantedAuthority> userAuthorities = new ArrayList<>(List.of(Authorities.getUserAuthority()));
-        var isUserAdmin = adminRepository.existsById(user.getId());
+        final var isUserAdmin = adminRepository.existsById(user.getId());
         if (isUserAdmin) {
             userAuthorities.add(Authorities.getAdminAuthority());
         }
 
         return UserCred.builder()
+                .id(user.getId())
                 .user(user)
                 .password(userPassword)
                 .authorities(userAuthorities)

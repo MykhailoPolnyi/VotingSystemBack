@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.lviv.iot.model.election.DetailedElectionDto;
 import ua.lviv.iot.model.election.ElectionDto;
+import ua.lviv.iot.security.jwt.JwtUtils;
 import ua.lviv.iot.service.AdminService;
 import ua.lviv.iot.service.ElectionService;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
     private final ElectionService electionService;
+    private final JwtUtils jwtUtils;
 
     @GetMapping(path = "/editable/{adminId}")
     public ResponseEntity<List<ElectionDto>> getEditableElectionList(@PathVariable Integer adminId) {

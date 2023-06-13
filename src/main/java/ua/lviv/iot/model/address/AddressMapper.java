@@ -22,6 +22,7 @@ public class AddressMapper {
                 .district(addressDto.getDistrict())
                 .state(addressDto.getState())
                 .postalCode(addressDto.getPostalCode())
+                .homeAddress(addressDto.getHomeAddress())
                 .build();
     }
 }

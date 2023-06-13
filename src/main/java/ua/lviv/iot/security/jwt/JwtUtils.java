@@ -7,7 +7,9 @@ import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import ua.lviv.iot.model.user.cred.UserCred;
+import ua.lviv.iot.security.SecurityUtils;
 
 import java.security.Key;
 import java.util.Date;
