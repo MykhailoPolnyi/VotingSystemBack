@@ -1,6 +1,7 @@
 package ua.lviv.iot.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.lviv.iot.model.election.DetailedElectionDto;
@@ -20,29 +21,36 @@ public class AdminController {
 
     @GetMapping(path = "/created/{adminId}")
     public ResponseEntity<List<ElectionDto>> getCreatedElectionList(@PathVariable Integer adminId) {
-        // TODO Implement method
-        return null;
+        List<ElectionDto> createdElections = adminService.getCreatedElectionList(adminId);
+        return ResponseEntity.ok(createdElections);
     }
 
 
     @PostMapping
     public ResponseEntity<DetailedElectionDto> createElection(@RequestBody DetailedElectionDto electionDto) {
-        // TODO Implement method
-        return null;
+        DetailedElectionDto createdElection = electionService.createElection(electionDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdElection);
     }
 
     @PutMapping("/{electionId}")
     public ResponseEntity<DetailedElectionDto> editElection(@RequestBody DetailedElectionDto electionDto,
                                                             @PathVariable Integer electionId,
                                                             @RequestParam Integer adminId) {
-        // TODO Implement method
-        return null;
+        DetailedElectionDto editedElection = electionService.updateElection(electionDto, electionId, adminId);
+        if (editedElection != null) {
+            return ResponseEntity.ok(editedElection);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping(path = "/{electionId}")
-    public ResponseEntity<?> deleteElectionById(@PathVariable Integer electionId,
-                                                @RequestParam Integer userId){
-        // TODO Implement method
-        return null;
+    public ResponseEntity<?> deleteElectionById(@PathVariable Integer electionId){
+        boolean deletionStatus = electionService.deleteElection(electionId);
+        if (deletionStatus) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

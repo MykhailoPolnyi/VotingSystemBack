@@ -18,16 +18,31 @@ public class UserController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
-        return null;
+        UserDto user = userService.findUser(id);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<UserDto> editUser(UserDto userDto, @PathVariable Integer id) {
-        return null;
+        UserDto editedUser = userService.updateUser(userDto, id);
+        if (editedUser != null) {
+            return ResponseEntity.ok(editedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable Integer id) {
-        return null;
+        boolean deletionStatus = userService.deleteUser(id);
+        if (deletionStatus) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

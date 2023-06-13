@@ -19,7 +19,7 @@ public class UserService {
         return null;
     }
 
-    public UserDto updateUser(UserDto userDto) {
+    public UserDto updateUser(UserDto userDto, Integer id) {
         // TODO Implement method
         return null;
     }

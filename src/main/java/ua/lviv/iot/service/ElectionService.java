@@ -41,7 +41,7 @@ public class ElectionService {
         return null;
     }
 
-    public DetailedElectionDto updateElection(DetailedElectionDto electionDto) {
+    public DetailedElectionDto updateElection(DetailedElectionDto electionDto, Integer electionId, Integer adminId) {
         // TODO Implement method
         return null;
     }
