@@ -3,6 +3,7 @@ package ua.lviv.iot.security.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import ua.lviv.iot.model.user.cred.UserCred;
@@ -47,7 +48,7 @@ public class JwtUtils {
         try {
             Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
             return true;
-        } catch (MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+        } catch (MalformedJwtException | ExpiredJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
             return false;
         }
     }

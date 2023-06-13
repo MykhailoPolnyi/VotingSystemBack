@@ -34,7 +34,7 @@ public class WebSecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        var authProvider = new DaoAuthenticationProvider();
 
         authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -58,7 +58,8 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth ->
-                        auth.requestMatchers(matcher).permitAll().anyRequest().authenticated()
+                        auth.requestMatchers(SIGN_MATCHER).permitAll()
+                                .requestMatchers(GENERAL_MATCHER).permitAll().anyRequest().authenticated()
                 );
 
         http.authenticationProvider(authenticationProvider());
@@ -68,7 +69,11 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    private final RequestMatcher matcher = request -> MATCHING_PATH.equals(request.getContextPath());
+    private final RequestMatcher GENERAL_MATCHER = request -> GENERAL_MATCHING_PATH.equals(request.getContextPath());
+    private final RequestMatcher SIGN_MATCHER =
+            request -> SIGN_IN_PATH.equals(request.getContextPath()) || SIGN_UP_PATH.equals(request.getContextPath());
 
-    private static final String MATCHING_PATH = "/**";
+    private static final String GENERAL_MATCHING_PATH = "/**";
+    private static final String SIGN_IN_PATH = "/signin";
+    private static final String SIGN_UP_PATH = "/signup";
 }

@@ -12,6 +12,6 @@ public class Authorities {
         return new SimpleGrantedAuthority(USER_AUTHORITY);
     }
 
-    private static String ADMIN_AUTHORITY = "ADMIN_AUTHORITY";
-    private static String USER_AUTHORITY = "USER_AUTHORITY";
+    private static final String ADMIN_AUTHORITY = "ADMIN_AUTHORITY";
+    private static final String USER_AUTHORITY = "USER_AUTHORITY";
 }
