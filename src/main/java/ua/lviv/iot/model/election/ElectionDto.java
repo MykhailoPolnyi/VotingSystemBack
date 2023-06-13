@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import ua.lviv.iot.model.address.AddressDto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @SuperBuilder
@@ -26,7 +26,7 @@ public class ElectionDto {
     private Integer minAge;
     private Integer maxAge;
     @NonNull
-    private Date startDate;
+    private LocalDate startDate;
     @NonNull
-    private Date endDate;
+    private LocalDate endDate;
 }

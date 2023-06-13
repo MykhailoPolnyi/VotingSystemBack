@@ -6,7 +6,7 @@ import ua.lviv.iot.model.election.candidate.Candidate;
 import ua.lviv.iot.model.user.Admin;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -38,10 +38,10 @@ public class Election {
     private Integer maxAge;
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date startDate;
+    private LocalDate startDate;
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date endDate;
+    private LocalDate endDate;
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private Admin admin;
