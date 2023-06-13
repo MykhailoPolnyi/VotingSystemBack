@@ -18,7 +18,7 @@ public class UserCred implements UserDetails {
     @Id
     @Column(name = "user_id")
     private Integer id;
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 

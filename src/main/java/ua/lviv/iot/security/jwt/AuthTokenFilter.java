@@ -7,6 +7,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ua.lviv.iot.model.user.cred.UserCred;
+import ua.lviv.iot.security.SecurityUtils;
 import ua.lviv.iot.service.UserService;
 
 import javax.servlet.FilterChain;
@@ -44,10 +45,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
+        String headerAuth = request.getHeader(SecurityUtils.AUTH_HEADER);
 
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(SecurityUtils.AUTH_PREFIX)) {
+            return headerAuth.substring(SecurityUtils.AUTH_PREFIX.length());
         }
 
         return null;
