@@ -1,14 +1,13 @@
 package ua.lviv.iot.model.user;
 
 import ua.lviv.iot.model.address.Address;
-import ua.lviv.iot.model.address.AddressDto;
 import ua.lviv.iot.model.address.AddressMapper;
 import ua.lviv.iot.model.user.cred.UserCred;
 
 public class UserMapper {
     private UserMapper() {}
     public static UserDto toDto(User user) {
-        AddressDto addressDto = AddressMapper.toDto(user.getAddress());
+        var addressDto = AddressMapper.toDto(user.getAddress());
         return UserDto.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())

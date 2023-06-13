@@ -1,42 +1,42 @@
 package ua.lviv.iot.model.user;
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ua.lviv.iot.model.address.Address;
+import ua.lviv.iot.model.election.result.ElectionResult;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @SuperBuilder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
-    @NonNull
     @Column(nullable = false, length = 40)
     protected String firstName;
-    @NonNull
     @Column(nullable = false, length = 40)
     protected String secondName;
-    @NonNull
     @Column(nullable = false, length = 10, unique = true)
     protected String identityCode;
-    @NonNull
     @Column(length = 40)
     protected String emailAddress;
-    @NonNull
     @Column(length = 10)
     protected String phoneNumber;
-    @NonNull
     @Column(nullable = false)
     protected Date birthDate;
-    @NonNull
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false, name = "address_id")
     protected Address address;
     @Enumerated(EnumType.ORDINAL)
     protected Sex sex;
+    @OneToMany(mappedBy = "elector")
+    private List<ElectionResult> electionResultAssociationList;
 }
