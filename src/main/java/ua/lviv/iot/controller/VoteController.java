@@ -3,7 +3,6 @@ package ua.lviv.iot.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.lviv.iot.model.election.result.ElectionResultDto;
 import ua.lviv.iot.model.election.vote.VoteDto;
 import ua.lviv.iot.service.ElectionResultService;
 
@@ -15,15 +14,23 @@ public class VoteController {
     private final ElectionResultService electionResultService;
 
     @PostMapping
-    public ResponseEntity<ElectionResultDto> vote(VoteDto voteDto) {
-        // TODO Implement method
-        return null;
+    public ResponseEntity<VoteDto> vote(VoteDto voteDto) {
+        VoteDto electionResult = electionResultService.addVote(voteDto);
+        if (electionResult != null) {
+            return ResponseEntity.ok(electionResult);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping(path = "/{electionId")
     public ResponseEntity<?> cancelVote(@PathVariable Integer electionId, Integer userId) {
-        // TODO Implement method
-        return null;
+        boolean cancellationStatus = electionResultService.removeVote(electionId, userId);
+        if (cancellationStatus) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
