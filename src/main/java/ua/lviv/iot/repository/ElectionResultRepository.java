@@ -22,6 +22,13 @@ public interface ElectionResultRepository extends JpaRepository<ElectionResult, 
             "WHERE er.candidate.election.id = :electionId")
     List<ElectionResult> findAllByElectionId(@Param("electionId") Integer electionId);
 
+    @Query(value = "SELECT EXISTS(SELECT 1 " +
+            "FROM ElectionResult er " +
+            "WHERE er.elector.id = :userId " +
+            "AND er.candidate.election.id = :electionId)")
+    Boolean existsByUserIdAndElectionId(@Param("userId") Integer userId,
+                                        @Param("electionId") Integer electionId);
+
     @Modifying
     @Query(value = "DELETE FROM ElectionResult er " +
             "where er.candidate.election.id = :electionId " +
