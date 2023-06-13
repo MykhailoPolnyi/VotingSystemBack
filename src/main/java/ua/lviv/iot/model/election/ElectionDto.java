@@ -14,7 +14,7 @@ public class ElectionDto {
     @NonNull
     private String name;
     private String description;
-    private Integer votesCount;
+    private Integer voteCount;
     @NonNull
     private Integer availableVotes;
     @NonNull
