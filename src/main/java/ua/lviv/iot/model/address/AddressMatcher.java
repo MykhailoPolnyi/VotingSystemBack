@@ -4,8 +4,8 @@ import ua.lviv.iot.model.election.LocalityType;
 
 public class AddressMatcher {
     public static Boolean compare(LocalityType level,
-                           Address userAddress,
-                           Address targetAddress) {
+                                  Address userAddress,
+                                  Address targetAddress) {
         if (level.equals(LocalityType.NATIONAL)) {
             return true;
         }
@@ -38,10 +38,13 @@ public class AddressMatcher {
         abstract protected AbstractMatcher getNextMatcher();
 
         abstract protected Boolean compare(Address userAddress, Address targetAddress);
+
     }
 
     private static class DistrictMatcher extends AbstractMatcher {
-        protected LocalityType level = LocalityType.DISTRICT;
+        public DistrictMatcher() {
+            this.level = LocalityType.DISTRICT;
+        }
 
         @Override
         protected Boolean compare(Address userAddress, Address targetAddress) {
@@ -55,8 +58,9 @@ public class AddressMatcher {
     }
 
     private static class CityMatcher extends AbstractMatcher {
-        protected LocalityType level = LocalityType.CITY;
-
+        public CityMatcher() {
+            this.level = LocalityType.DISTRICT;
+        }
         @Override
         protected Boolean compare(Address userAddress, Address targetAddress) {
             return userAddress.getCity().equals(targetAddress.getCity());
@@ -70,7 +74,9 @@ public class AddressMatcher {
     }
 
     private static class StateMatcher extends AbstractMatcher {
-        protected LocalityType level = LocalityType.STATE;
+        public StateMatcher() {
+            this.level = LocalityType.DISTRICT;
+        }
 
         @Override
         protected Boolean compare(Address userAddress, Address targetAddress) {
