@@ -3,6 +3,7 @@ package ua.lviv.iot.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.ApplicationScope;
+import ua.lviv.iot.model.address.AddressMatcher;
 import ua.lviv.iot.model.election.ElectionAnalysisDto;
 import ua.lviv.iot.model.election.result.ElectionResult;
 import ua.lviv.iot.model.election.result.ElectionResultDto;
@@ -14,6 +15,7 @@ import ua.lviv.iot.repository.ElectionRepository;
 import ua.lviv.iot.repository.ElectionResultRepository;
 import ua.lviv.iot.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -38,7 +40,7 @@ public class ElectionResultService {
     }
 
     public VoteDto addVote(VoteDto voteDto) {
-        if(!validateVoting(voteDto)){
+        if (!validateVoting(voteDto)) {
             return null;
         }
 
@@ -49,26 +51,54 @@ public class ElectionResultService {
     }
 
     public Boolean removeVote(Integer electionId, Integer userId) {
-        if(!electionRepository.existsById(electionId)){
+        Boolean hasVoted = electionResultRepository
+                .existsByUserIdAndElectionId(electionId, userId);
+        if (!hasVoted) {
             return null;
         }
 
         electionResultRepository.deleteVoteByElectionIdAndUserId(electionId, userId);
+
         return true;
     }
 
     private Boolean validateVoting(VoteDto voteDto) {
-        var election = electionRepository.findById(voteDto.getElectionId()).orElse(null);
-        if(election == null){
-            return false;
-        }
+        var election = electionRepository
+                .findById(voteDto.getElectionId())
+                .orElse(null);
+        if (election == null) return false;
 
-        if(!userRepository.existsById(voteDto.getUserId())){
-            return false;
-        }
+        var isElectionActive = LocalDate.now()
+                .isBefore(election.getEndDate())
+                && LocalDate.now()
+                .isAfter(election.getStartDate());
+        if (!isElectionActive) return false;
+
+        var user = userRepository
+                .findById(voteDto.getUserId())
+                .orElse(null);
+        if (user == null) return false;
+
+        var isLocationMatch = AddressMatcher
+                .compare(election.getLocalityType(),
+                        user.getAddress(),
+                        election.getLocalityAddress());
+        if (!isLocationMatch) return false;
+
+        var isAgeMatch = (user.getAge() <= election.getMinAge())
+                || (election.getMaxAge() != null
+                    && user.getAge() >= election.getMaxAge());
+        if (!isAgeMatch) return false;
+
+        Boolean hasVoted = electionResultRepository
+                .existsByUserIdAndElectionId(
+                        voteDto.getUserId(),
+                        voteDto.getElectionId());
+        if (hasVoted) return false;
+
         Integer userVoteCount = 0;
         for (var candidate : voteDto.getVotingMap().entrySet()) {
-            if(!candidateRepository.existsById(candidate.getKey())){
+            if (!candidateRepository.existsById(candidate.getKey())) {
                 return false;
             }
             userVoteCount += candidate.getValue();
