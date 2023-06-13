@@ -21,29 +21,39 @@ public class ElectionController {
     private final ElectionResultService electionResultService;
 
     @GetMapping
-    public ResponseEntity<List<ElectionDto>> getAllElectionList(@RequestParam String activityFilter,
-                                                                @RequestParam Integer userId) {
-        // TODO Implement method
-        return null;
+    public ResponseEntity<List<ElectionDto>> getAllElectionList() {
+        List<ElectionDto> electionList = electionService.getAllElectionList();
+        return ResponseEntity.ok(electionList);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<DetailedElectionDto> getElectionById(@PathVariable Integer id,
-                                                               @RequestParam Integer userId) {
-        // TODO Implement method
-        return null;
+    public ResponseEntity<DetailedElectionDto> getElectionById(@PathVariable Integer id) {
+        DetailedElectionDto election = electionService.findElectionById(id);
+        if (election != null) {
+            return ResponseEntity.ok(election);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping(path = "/{id}/result")
     public ResponseEntity<ElectionResultDto> getElectionResult(@PathVariable Integer id,
                                                                @RequestParam Integer userId){
-        // TODO Implement method
-        return null;
+        ElectionResultDto electionResult = electionResultService.getElectionResult(id, userId);
+        if (electionResult != null) {
+            return ResponseEntity.ok(electionResult);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping(path = "/{id}/analysis")
     public ResponseEntity<ElectionAnalysisDto> getElectionAnalysis(@PathVariable Integer id) {
-        // TODO Implement method
-        return null;
+        ElectionAnalysisDto electionAnalysis = electionResultService.getElectionAnalysis(id);
+        if (electionAnalysis != null) {
+            return ResponseEntity.ok(electionAnalysis);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
