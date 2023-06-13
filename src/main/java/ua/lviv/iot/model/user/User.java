@@ -5,7 +5,8 @@ import ua.lviv.iot.model.address.Address;
 import ua.lviv.iot.model.election.result.ElectionResult;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Entity
@@ -28,7 +29,7 @@ public class User {
     @Column(nullable = false)
     protected String phoneNumber;
     @Column(nullable = false)
-    protected Date birthDate;
+    protected LocalDate birthDate;
     @Enumerated(EnumType.ORDINAL)
     protected Sex sex;
     @ManyToOne
@@ -36,4 +37,10 @@ public class User {
     protected Address address;
     @OneToMany(mappedBy = "elector")
     private List<ElectionResult> electionResultAssociationList;
+
+    public Integer getAge() {
+        return Period
+                .between(birthDate, LocalDate.now())
+                .getYears();
+    }
 }

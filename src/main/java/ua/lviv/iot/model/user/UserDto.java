@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import ua.lviv.iot.model.address.AddressDto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 
 @Data
@@ -23,7 +23,7 @@ public class UserDto {
     @NonNull
     protected String phoneNumber;
     @NonNull
-    protected Date birthDate;
+    protected LocalDate birthDate;
     @NonNull
     protected AddressDto address;
     protected Integer sex;
