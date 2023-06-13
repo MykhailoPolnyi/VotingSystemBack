@@ -6,4 +6,5 @@ import ua.lviv.iot.model.user.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+    Boolean existsByIdentityCode(String code);
 }
