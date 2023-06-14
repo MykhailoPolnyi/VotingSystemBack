@@ -26,7 +26,6 @@ public class ElectionResultService {
     private final ElectionRepository electionRepository;
     private final ElectionResultRepository electionResultRepository;
     private final CandidateRepository candidateRepository;
-    private final ElectionAnalyzer electionAnalyzer;
 
     public ElectionResultDto getElectionResult(Integer electionId, Integer userId) {
         var electionResultList = electionResultRepository.findAllByElectionId(electionId);
@@ -57,7 +56,8 @@ public class ElectionResultService {
             return null;
         }
 
-        electionResultRepository.deleteVoteByElectionIdAndUserId(electionId, userId);
+        var deleteList = electionResultRepository.findByUserIdAndElectionId(userId, electionId);
+        electionResultRepository.deleteAll(deleteList);
 
         return true;
     }
@@ -85,9 +85,9 @@ public class ElectionResultService {
                         election.getLocalityAddress());
         if (!isLocationMatch) return false;
 
-        var isAgeMatch = (user.getAge() <= election.getMinAge())
+        var isAgeMatch = (user.getAge() >= election.getMinAge())
                 || (election.getMaxAge() != null
-                    && user.getAge() >= election.getMaxAge());
+                    && user.getAge() <= election.getMaxAge());
         if (!isAgeMatch) return false;
 
         Boolean hasVoted = electionResultRepository

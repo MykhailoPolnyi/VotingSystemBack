@@ -28,7 +28,7 @@ public class User {
     protected String emailAddress;
     @Column(nullable = false)
     protected String phoneNumber;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     protected LocalDate birthDate;
     @Enumerated(EnumType.ORDINAL)
     protected Sex sex;

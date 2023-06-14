@@ -8,6 +8,7 @@ import ua.lviv.iot.model.election.Election;
 import ua.lviv.iot.model.election.ElectionDto;
 import ua.lviv.iot.model.election.ElectionMapper;
 import ua.lviv.iot.model.election.result.ElectionResultMapper;
+import ua.lviv.iot.repository.CandidateRepository;
 import ua.lviv.iot.repository.ElectionRepository;
 import ua.lviv.iot.repository.ElectionResultRepository;
 
@@ -20,6 +21,7 @@ import java.util.List;
 public class ElectionService {
     private final ElectionRepository electionRepository;
     private final ElectionResultRepository electionResultRepository;
+    private final CandidateRepository candidateRepository;
 
     public List<ElectionDto> getAllElectionList() {
         var electionList = electionRepository.findAll();
@@ -64,8 +66,14 @@ public class ElectionService {
 
     public DetailedElectionDto createElection(DetailedElectionDto electionDto) {
         var election = ElectionMapper.toEntity(electionDto);
-        electionRepository.save(election);
-        return electionDto;
+        var candidateList = election.getCandidateAssociationList();
+        election = electionRepository.save(election);
+        for (var candidate : candidateList) {
+            candidate.setElection(election);
+        }
+        candidateRepository.saveAll(candidateList);
+        election.setCandidateAssociationList(candidateList);
+        return ElectionMapper.toDetailedDto(election, null, 0);
     }
 
     public DetailedElectionDto updateElection(DetailedElectionDto electionDto) {
@@ -74,8 +82,11 @@ public class ElectionService {
         }
 
         var election = ElectionMapper.toEntity(electionDto);
-        electionRepository.save(election);
-        return electionDto;
+        var candidateList = election.getCandidateAssociationList();
+        candidateRepository.saveAll(candidateList);
+        election = electionRepository.save(election);
+        var voteCount = electionResultRepository.countVoteByElectionId(election.getId());
+        return ElectionMapper.toDetailedDto(election, null, voteCount);
     }
 
     public Boolean deleteElection(Integer id) {

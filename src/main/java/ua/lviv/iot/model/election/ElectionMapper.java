@@ -13,8 +13,9 @@ public class ElectionMapper {
     public static DetailedElectionDto toDetailedDto(Election election,
                                                     ElectionResultDto electionResultDto,
                                                     Integer voteCount) {
-        var localityAddressDto = AddressMapper
-                .toDto(election.getLocalityAddress());
+        var localityAddressDto = election.getLocalityAddress() != null
+                ? AddressMapper.toDto(election.getLocalityAddress())
+                : null;
         var candidateDto = CandidateMapper
                 .toDtoList(election.getCandidateAssociationList());
         return DetailedElectionDto.builder()
@@ -40,8 +41,9 @@ public class ElectionMapper {
         var admin = Admin.builder()
                 .id(electionDto.getAdminId())
                 .build();
-        var localityAddress = AddressMapper
-                .toEntity(electionDto.getLocalityAddress());
+        var localityAddress = electionDto.getLocalityAddress() != null
+                ? AddressMapper.toEntity(electionDto.getLocalityAddress())
+                : null;
         var localityType = LocalityType
                 .valueOf(electionDto.getLocalityType());
         var candidate = CandidateMapper
@@ -75,8 +77,9 @@ public class ElectionMapper {
     }
 
     private static ElectionDto toDto(Election election, Integer votesCount) {
-        var localityAddress = AddressMapper
-                .toDto(election.getLocalityAddress());
+        var localityAddress = election.getLocalityAddress() != null
+                ? AddressMapper.toDto(election.getLocalityAddress())
+                : null;
         return ElectionDto.builder()
                 .id(election.getId())
                 .name(election.getName())

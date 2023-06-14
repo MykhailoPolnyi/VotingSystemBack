@@ -14,7 +14,7 @@ public class VoteController {
     private final ElectionResultService electionResultService;
 
     @PostMapping
-    public ResponseEntity<VoteDto> vote(VoteDto voteDto) {
+    public ResponseEntity<VoteDto> vote(@RequestBody VoteDto voteDto) {
         VoteDto electionResult = electionResultService.addVote(voteDto);
         if (electionResult != null) {
             return ResponseEntity.ok(electionResult);
@@ -23,8 +23,9 @@ public class VoteController {
         }
     }
 
-    @DeleteMapping(path = "/{electionId")
-    public ResponseEntity<?> cancelVote(@PathVariable Integer electionId, Integer userId) {
+    @DeleteMapping(path = "/{electionId}")
+    public ResponseEntity<?> cancelVote(@PathVariable Integer electionId) {
+        Integer userId = 1; //TODO get userId from JWT token
         boolean cancellationStatus = electionResultService.removeVote(electionId, userId);
         if (cancellationStatus) {
             return ResponseEntity.ok().build();
