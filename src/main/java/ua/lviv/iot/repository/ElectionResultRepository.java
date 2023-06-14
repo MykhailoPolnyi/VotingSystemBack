@@ -1,14 +1,12 @@
 package ua.lviv.iot.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ua.lviv.iot.model.election.result.ElectionResult;
 import ua.lviv.iot.model.election.result.ElectionResultId;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository

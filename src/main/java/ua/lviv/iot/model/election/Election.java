@@ -1,7 +1,6 @@
 package ua.lviv.iot.model.election;
 
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 import ua.lviv.iot.model.address.Address;
 import ua.lviv.iot.model.election.candidate.Candidate;
 import ua.lviv.iot.model.user.Admin;

@@ -2,7 +2,6 @@ package ua.lviv.iot.model.election;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import ua.lviv.iot.model.address.AddressDto;
 
@@ -13,33 +12,26 @@ import java.time.LocalDate;
 public class ElectionDto {
     @JsonProperty("id")
     private Integer id;
-    @NonNull
-    @JsonProperty("name")
+    @JsonProperty(value = "name", required = true)
     private String name;
     @JsonProperty("description")
     private String description;
     @JsonProperty("voteCount")
     private Integer voteCount;
-    @NonNull
-    @JsonProperty("availableVotes")
+    @JsonProperty(value = "availableVotes", required = true)
     private Integer availableVotes;
-    @NonNull
-    @JsonProperty("localityType")
+    @JsonProperty(value = "localityType", required = true)
     private Integer localityType;
     @JsonProperty("localityAddress")
     private AddressDto localityAddress;
-    @NonNull
-    @JsonProperty("hasRetract")
+    @JsonProperty(value = "hasRetract", required = true)
     private Boolean hasRetract;
-    @NonNull
-    @JsonProperty("minAge")
+    @JsonProperty(value = "minAge", required = true)
     private Integer minAge;
     @JsonProperty("maxAge")
     private Integer maxAge;
-    @NonNull
-    @JsonProperty("startDate")
+    @JsonProperty(value = "startDate", required = true)
     private LocalDate startDate;
-    @NonNull
-    @JsonProperty("endDate")
+    @JsonProperty(value = "endDate", required = true)
     private LocalDate endDate;
 }

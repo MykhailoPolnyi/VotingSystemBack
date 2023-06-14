@@ -2,7 +2,6 @@ package ua.lviv.iot.model.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import ua.lviv.iot.model.address.AddressDto;
 
@@ -14,26 +13,19 @@ import java.time.LocalDate;
 public class UserDto {
     @JsonProperty("id")
     protected Integer id;
-    @NonNull
-    @JsonProperty("firstName")
+    @JsonProperty(value = "firstName", required = true)
     protected String firstName;
-    @NonNull
-    @JsonProperty("secondName")
+    @JsonProperty(value = "secondName", required = true)
     protected String secondName;
-    @NonNull
-    @JsonProperty("identityCode")
+    @JsonProperty(value = "identityCode", required = true)
     protected String identityCode;
-    @NonNull
-    @JsonProperty("email")
+    @JsonProperty(value = "email", required = true)
     protected String email;
-    @NonNull
-    @JsonProperty("phoneNumber")
+    @JsonProperty(value = "phoneNumber", required = true)
     protected String phoneNumber;
-    @NonNull
-    @JsonProperty("birthDate")
+    @JsonProperty(value = "birthDate", required = true)
     protected LocalDate birthDate;
-    @NonNull
-    @JsonProperty("address")
+    @JsonProperty(value = "address", required = true)
     protected AddressDto address;
     @JsonProperty("sex")
     protected Integer sex;
