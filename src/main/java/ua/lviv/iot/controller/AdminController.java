@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.lviv.iot.model.election.DetailedElectionDto;
 import ua.lviv.iot.model.election.ElectionDto;
+import ua.lviv.iot.security.SecurityUtils;
+import ua.lviv.iot.security.jwt.JwtUtils;
 import ua.lviv.iot.service.AdminService;
 import ua.lviv.iot.service.ElectionService;
+import ua.lviv.iot.service.UserService;
 
 import java.util.List;
 
@@ -16,31 +19,52 @@ import java.util.List;
 @RequestMapping(path = "/election")
 @RequiredArgsConstructor
 public class AdminController {
+    private final UserService userService;
     private final AdminService adminService;
     private final ElectionService electionService;
+    private final JwtUtils jwtUtils;
 
-    @GetMapping(path = "/editable/{adminId}")
-    public ResponseEntity<List<ElectionDto>> getEditableElectionList(@PathVariable Integer adminId) {
-        List<ElectionDto> createdElections = electionService.getEditableElectionList(adminId);
+    @GetMapping(path = "/editable")
+    public ResponseEntity<List<ElectionDto>> getEditableElectionList(@RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
+        var userCred = userService.getUserFromAuthToken(authToken);
+        if (userCred == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        if (!adminService.isUserAdmin(userCred.getId())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        List<ElectionDto> createdElections = electionService.getEditableElectionList(userCred.getId());
         return ResponseEntity.ok(createdElections);
     }
 
 
     @PostMapping
-    public ResponseEntity<DetailedElectionDto> createElection(@RequestBody DetailedElectionDto electionDto) {
+    public ResponseEntity<DetailedElectionDto> createElection(@RequestBody DetailedElectionDto electionDto,
+                                                              @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
+        if (userService.getUserFromAuthToken(authToken) == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         DetailedElectionDto createdElection = electionService.createElection(electionDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdElection);
     }
 
     @PutMapping("/{electionId}")
     public ResponseEntity<DetailedElectionDto> editElection(@RequestBody DetailedElectionDto electionDto,
-                                                            @PathVariable Integer electionId) {
-        Integer adminId = 1; // TODO Get adminId from JWT token
-        if (adminService.canAdminEditElection(adminId, electionId)){
+                                                            @PathVariable Integer electionId,
+                                                            @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
+        var userCred = userService.getUserFromAuthToken(authToken);
+        if (userCred == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        if (!adminService.isUserAdmin(userCred.getId())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if (!adminService.canAdminEditElection(userCred.getId(), electionId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (!electionDto.getId().equals(electionId)){
+        if (!electionId.equals(electionDto.getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -53,7 +77,16 @@ public class AdminController {
     }
 
     @DeleteMapping(path = "/{electionId}")
-    public ResponseEntity<?> deleteElectionById(@PathVariable Integer electionId){
+    public ResponseEntity<?> deleteElectionById(@PathVariable Integer electionId,
+                                                @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
+        var userCred = userService.getUserFromAuthToken(authToken);
+        if (userCred == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        if (!adminService.isUserAdmin(userCred.getId())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         boolean deletionStatus = electionService.deleteElection(electionId);
         if (deletionStatus) {
             return ResponseEntity.ok().build();

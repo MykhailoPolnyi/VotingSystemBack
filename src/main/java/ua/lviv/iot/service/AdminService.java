@@ -18,20 +18,11 @@ public class AdminService {
     }
 
     public Boolean canAdminEditElection(Integer adminId, Integer electionId) {
-        if (isUserAdmin(adminId)) {
-           return false;
-        }
-
-        var electionList = electionRepository.findEditableElectionList(adminId);
-        var election = electionList.stream()
-                .filter(e -> e.getId().equals(electionId))
-                .findFirst()
-                .orElse(null);
-
-        if (election == null){
+        if (!isUserAdmin(adminId)) {
             return false;
         }
 
-        return true;
+        var electionList = electionRepository.findEditableElectionList(adminId);
+        return electionList.stream().anyMatch(e -> e.getId().equals(electionId));
     }
 }
