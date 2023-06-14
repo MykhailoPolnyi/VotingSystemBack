@@ -44,7 +44,7 @@ public class VoteController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        boolean cancellationStatus = electionResultService.removeVote(electionId, userCred.getId());
+        Boolean cancellationStatus = electionResultService.removeVote(electionId, userCred.getId());
         if (cancellationStatus) {
             return ResponseEntity.ok().build();
         } else {

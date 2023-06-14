@@ -59,6 +59,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
                         .requestMatchers(SIGN_MATCHER).permitAll()
+                        .requestMatchers(SWAGGER_MATCHER).permitAll()
                         .requestMatchers().permitAll().anyRequest().authenticated()
                 );
 
@@ -72,6 +73,11 @@ public class WebSecurityConfig {
     private final RequestMatcher SIGN_MATCHER =
             request -> SIGN_IN_PATH.equals(request.getServletPath()) || SIGN_UP_PATH.equals(request.getServletPath());
 
+    private final RequestMatcher SWAGGER_MATCHER =
+            request -> request.getServletPath().startsWith(SWAGGER_PATH) || request.getServletPath().startsWith(API_PATH);
+
     private static final String SIGN_IN_PATH = "/signin";
     private static final String SIGN_UP_PATH = "/signup";
+    private static final String SWAGGER_PATH = "/swagger";
+    private static final String API_PATH = "/v2/api-docs";
 }

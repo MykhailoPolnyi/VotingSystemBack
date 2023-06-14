@@ -19,7 +19,7 @@ public class Candidate {
     @Column(nullable = false)
     private String name;
     private String description;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "election_id", nullable = false)
     private Election election;
     @OneToMany(mappedBy = "candidate")

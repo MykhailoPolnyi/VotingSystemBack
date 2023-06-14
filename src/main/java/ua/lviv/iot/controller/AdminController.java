@@ -60,11 +60,11 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        if (adminService.canAdminEditElection(userCred.getId(), electionId)) {
+        if (!adminService.canAdminEditElection(userCred.getId(), electionId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (!electionDto.getId().equals(electionId)) {
+        if (!electionId.equals(electionDto.getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
