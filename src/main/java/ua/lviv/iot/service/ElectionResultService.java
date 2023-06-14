@@ -14,6 +14,7 @@ import ua.lviv.iot.repository.CandidateRepository;
 import ua.lviv.iot.repository.ElectionRepository;
 import ua.lviv.iot.repository.ElectionResultRepository;
 import ua.lviv.iot.repository.UserRepository;
+import ua.lviv.iot.service.analysis.ElectionAnalyzer;
 
 import java.time.LocalDate;
 import java.util.List;
