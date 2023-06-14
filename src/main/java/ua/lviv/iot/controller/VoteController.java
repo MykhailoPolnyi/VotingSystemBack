@@ -18,7 +18,7 @@ public class VoteController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<VoteDto> vote(VoteDto voteDto,
+    public ResponseEntity<VoteDto> vote(@RequestBody VoteDto voteDto,
                                         @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
         var userCred = userService.getUserFromAuthToken(authToken);
         if (userCred == null) {
