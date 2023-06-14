@@ -1,6 +1,7 @@
 package ua.lviv.iot.model.election;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import ua.lviv.iot.model.address.Address;
 import ua.lviv.iot.model.election.candidate.Candidate;
 import ua.lviv.iot.model.user.Admin;
@@ -26,7 +27,7 @@ public class Election {
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private LocalityType localityType;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address localityAddress;
     @Builder.Default
@@ -36,15 +37,13 @@ public class Election {
     @Column(nullable = false)
     private Integer minAge = 18;
     private Integer maxAge;
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate startDate;
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private Admin admin;
-    @OneToMany(mappedBy = "election")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "election")
     private List<Candidate> candidateAssociationList;
 }
