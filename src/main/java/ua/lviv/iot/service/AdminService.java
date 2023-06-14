@@ -18,7 +18,7 @@ public class AdminService {
     }
 
     public Boolean canAdminEditElection(Integer adminId, Integer electionId) {
-        if (isUserAdmin(adminId)) {
+        if (!isUserAdmin(adminId)) {
             return false;
         }
 
@@ -28,10 +28,6 @@ public class AdminService {
                 .findFirst()
                 .orElse(null);
 
-        if (election == null) {
-            return false;
-        }
-
-        return true;
+        return election != null;
     }
 }

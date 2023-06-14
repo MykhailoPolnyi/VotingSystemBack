@@ -17,7 +17,6 @@ import ua.lviv.iot.service.UserService;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final JwtUtils jwtUtils;
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
@@ -29,21 +28,17 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<UserDto> editUser(UserDto userDto,
+    public ResponseEntity<UserDto> editUser(@RequestBody UserDto userDto,
                                             @PathVariable Integer id,
                                             @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
-        var userIdentity = jwtUtils.getUserNameFromJwtToken(authToken);
-        if (userIdentity == null) {
-            System.out.println("Cannot get user identity from token");
+        var userCred = userService.getUserFromAuthToken(authToken);
+        if (userCred == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        var userCred = userService.loadUserByUsername(userIdentity);
-        if (userCred == null) {
-            System.out.println("Cannot find user by identity: " + userIdentity);
-            return ResponseEntity.notFound().build();
+        if (!userDto.getId().equals(id)) {
+            return ResponseEntity.badRequest().build();
         }
-        if (!userCred.getId().equals(id) || !userCred.getId().equals(userDto.getId())) {
-            System.out.println("Trying to delete other user");
+        if (!userCred.getId().equals(userDto.getId())) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
@@ -51,19 +46,13 @@ public class UserController {
 
         return ResponseEntity.ok(updatedUser);
     }
-    // TODO: move user auth check logic and create admin check logic
+
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable Integer id,
                                             @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
-        var userIdentity = jwtUtils.getUserNameFromJwtToken(authToken);
-        if (userIdentity == null) {
-            System.out.println("Cannot get user identity from token");
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        var userCred = userService.loadUserByUsername(userIdentity);
+        var userCred = userService.getUserFromAuthToken(authToken);
         if (userCred == null) {
-            System.out.println("Cannot find user by identity: " + userIdentity);
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         if (!userCred.getId().equals(id)) {
             System.out.println("Trying to delete other user");

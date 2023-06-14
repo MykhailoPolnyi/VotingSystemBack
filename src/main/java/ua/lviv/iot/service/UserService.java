@@ -17,6 +17,7 @@ import ua.lviv.iot.repository.AddressRepository;
 import ua.lviv.iot.repository.AdminRepository;
 import ua.lviv.iot.repository.UserCredRepository;
 import ua.lviv.iot.repository.UserRepository;
+import ua.lviv.iot.security.jwt.JwtUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class UserService implements UserDetailsService {
     private final AddressRepository addressRepository;
     private final UserCredRepository userCredRepository;
     private final PasswordEncoder encoder;
+    private final JwtUtils jwtUtils;
 
     @Transactional
     public void createUser(UserCredDto userDto) {
@@ -85,5 +87,13 @@ public class UserService implements UserDetailsService {
                 .password(userPassword)
                 .authorities(userAuthorities)
                 .build();
+    }
+
+    public UserCred getUserFromAuthToken(String authToken) {
+        var userIdentity = jwtUtils.getUserNameFromJwtToken(authToken);
+        if (userIdentity == null) {
+            return null;
+        }
+        return loadUserByUsername(userIdentity);
     }
 }
