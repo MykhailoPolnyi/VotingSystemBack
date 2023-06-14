@@ -1,8 +1,7 @@
 package ua.lviv.iot.model.election;
 
 import lombok.NonNull;
-
-import java.util.HashMap;
+import ua.lviv.iot.model.election.candidate.Candidate;
 
 public class ElectionAnalysisDto {
     private Integer id;
@@ -11,14 +10,12 @@ public class ElectionAnalysisDto {
     private String candidate;
     private Integer voteCount;
 
-    private HashMap<Integer, Integer> candidateVoteNumberMap;
-
     public void setLocation(String location) {
         this.location = location;
     }
 
-    public void setCandidate(String candidate) {
-        this.candidate = candidate;
+    public void setCandidate(Candidate candidate) {
+        this.candidate = candidate.getName();
     }
 
     public void setVoteCount(Integer voteCount) {
