@@ -2,6 +2,8 @@ package ua.lviv.iot.model.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import ua.lviv.iot.model.address.AddressDto;
 
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class UserDto {
     @JsonProperty("id")
     protected Integer id;

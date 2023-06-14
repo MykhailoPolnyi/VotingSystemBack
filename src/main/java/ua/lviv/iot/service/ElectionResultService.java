@@ -51,9 +51,9 @@ public class ElectionResultService {
 
     public Boolean removeVote(Integer electionId, Integer userId) {
         Boolean hasVoted = electionResultRepository
-                .existsByUserIdAndElectionId(electionId, userId);
+                .existsByUserIdAndElectionId(userId, electionId);
         if (!hasVoted) {
-            return null;
+            return false;
         }
 
         var deleteList = electionResultRepository.findByUserIdAndElectionId(userId, electionId);
@@ -87,7 +87,7 @@ public class ElectionResultService {
 
         var isAgeMatch = (user.getAge() >= election.getMinAge())
                 || (election.getMaxAge() != null
-                    && user.getAge() <= election.getMaxAge());
+                && user.getAge() <= election.getMaxAge());
         if (!isAgeMatch) return false;
 
         Boolean hasVoted = electionResultRepository

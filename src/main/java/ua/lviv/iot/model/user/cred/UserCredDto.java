@@ -8,7 +8,7 @@ import ua.lviv.iot.model.user.UserDto;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@NoArgsConstructor
 public class UserCredDto extends UserDto {
-    @NonNull
     private String password;
 }

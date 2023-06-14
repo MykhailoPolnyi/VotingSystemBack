@@ -20,7 +20,7 @@ public class ElectionResult {
     private User elector;
 
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id", referencedColumnName = "id")
     private Candidate candidate;
 

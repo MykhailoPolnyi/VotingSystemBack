@@ -3,7 +3,6 @@ package ua.lviv.iot.model.user;
 import ua.lviv.iot.model.address.Address;
 import ua.lviv.iot.model.address.AddressMapper;
 import ua.lviv.iot.model.user.cred.UserCred;
-import ua.lviv.iot.model.user.cred.UserCredDto;
 
 public class UserMapper {
     private UserMapper() {}
@@ -26,22 +25,22 @@ public class UserMapper {
         Address address = AddressMapper.toEntity(dto.getAddress());
         return User.builder()
                 .id(dto.getId())
-                .firstName(dto.getFirstName())
-                .secondName(dto.getSecondName())
-                .identityCode(dto.getIdentityCode())
-                .emailAddress(dto.getEmail())
-                .phoneNumber(dto.getPhoneNumber())
+                .firstName(dto.getFirstName().strip())
+                .secondName(dto.getSecondName().strip())
+                .identityCode(dto.getIdentityCode().strip())
+                .emailAddress(dto.getEmail().strip())
+                .phoneNumber(dto.getPhoneNumber().strip())
                 .birthDate(dto.getBirthDate())
                 .address(address)
                 .sex(Sex.valueOf(dto.getSex()))
                 .build();
     }
 
-    public static UserCred toCred(UserCredDto dto) {
-        Address address = AddressMapper.toEntity(dto.getAddress());
+    public static UserCred toCred(User user, String password) {
         return UserCred.builder()
-                .user(toEntity(dto))
-                .password(dto.getPassword())
+                .id(user.getId())
+                .user(user)
+                .password(password)
                 .build();
     }
 }
