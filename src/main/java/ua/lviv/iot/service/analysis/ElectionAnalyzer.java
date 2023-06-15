@@ -1,77 +1,51 @@
 package ua.lviv.iot.service.analysis;
 
+import ua.lviv.iot.model.address.Address;
 import ua.lviv.iot.model.election.Election;
-import ua.lviv.iot.model.election.ElectionAnalysisDto;
-import ua.lviv.iot.model.election.candidate.Candidate;
+import ua.lviv.iot.model.election.LocalityType;
+import ua.lviv.iot.model.election.candidate.ElectionAnalysis;
 import ua.lviv.iot.model.election.result.ElectionResult;
-import ua.lviv.iot.service.analysis.location.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ElectionAnalyzer {
+    public ElectionAnalysis analyzeElection(Election election, List<ElectionResult> results) {
+        var analysis = new ElectionAnalysis();
+        for (ElectionResult vote : results) {
+            var candidateName = vote.getCandidate().getName();
+            var location = receiveLocationNameForLocality(
+                    vote.getElector().getAddress(),
+                    election.getLocalityType()
+            );
+            var votes = vote.getVoteNumber();
 
-    public Map<Candidate, Integer> getCandidateVotes(Election election) {
-        List<ElectionResult> electionResults = electionResultRepository.findAllByElectionId(election.getId());
-        Map<Candidate, Integer> candidateVotes = new HashMap<>();
-
-        //get all candidate
-        for (ElectionResult result : electionResults) {
-            Candidate candidate = result.getCandidate();
-
-            candidateVotes.put(candidate, 0);
-        }
-
-        // get vote to all candidate
-        for (Map.Entry<Candidate, Integer> entry : candidateVotes.entrySet()) {
-            Candidate candidate = entry.getKey();
-            int voteCount = entry.getValue();
-
-            for (ElectionResult result : electionResults) {
-                if (result.getCandidate() == candidate){
-                    voteCount = voteCount + result.getVoteNumber();
-                }
+            var resultsMap = analysis.get(location);
+            if (resultsMap == null) {
+                var newResultsMap = new HashMap<String, Integer>();
+                newResultsMap.put(candidateName, votes);
+                analysis.put(location, newResultsMap);
+            } else if (resultsMap.containsKey(candidateName)) {
+                var oldVotes = resultsMap.get(candidateName);
+                resultsMap.put(candidateName, oldVotes + votes);
+            } else {
+                resultsMap.put(candidateName, votes);
             }
-
-            entry.setValue(voteCount);
         }
-            return candidateVotes;
+
+        return analysis;
     }
 
-    public List<ElectionAnalysisDto> analyzeLocation(Election election, List<ElectionResult> results) {
-        switch (election.getLocalityType()) {
+    private String receiveLocationNameForLocality(Address address, LocalityType locality) {
+        switch (locality) {
             case CITY:
-                LocalityAnalysisStrategy cityStrategy = new CityLocation();
-                return cityStrategy.analyzeElection(election, results);
+                return address.getDistrict();
             case STATE:
-                LocalityAnalysisStrategy stateStrategy = new StateLocation();
-                return stateStrategy.analyzeElection(election, results);
+                return address.getCity();
             case NATIONAL:
-                LocalityAnalysisStrategy nationalStrategy = new NationalLocation();
-                return nationalStrategy.analyzeElection(election, results);
+                return address.getState();
             default:
                 return null;
         }
-
-
-
-        Map<Candidate, Integer> electionResults = getCandidateVotes(election);
-        List<ElectionAnalysisDto> analysisDtoList = new ArrayList<>();
-
-        for (Map.Entry<Candidate, Integer> entry : electionResults.entrySet()) {
-            Candidate candidate = entry.getKey();
-            int voteCount = entry.getValue();
-
-            ElectionAnalysisDto analysisDto = new ElectionAnalysisDto();
-            analysisDto.setCandidate(candidate);
-            analysisDto.setVoteCount(voteCount);
-            analysisDto.setLocation(getLocationByElection(election));
-
-            analysisDtoList.add(analysisDto);
-        }
-
-        return analysisDtoList;
     }
 }

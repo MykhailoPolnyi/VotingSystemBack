@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.ApplicationScope;
 import ua.lviv.iot.model.address.AddressMatcher;
-import ua.lviv.iot.model.election.ElectionAnalysisDto;
+import ua.lviv.iot.model.election.candidate.ElectionAnalysis;
 import ua.lviv.iot.model.election.result.ElectionResult;
 import ua.lviv.iot.model.election.result.ElectionResultDto;
 import ua.lviv.iot.model.election.result.ElectionResultMapper;
@@ -34,9 +34,16 @@ public class ElectionResultService {
         return ElectionResultMapper.toDto(electionResultList, userId);
     }
 
-    public ElectionAnalysisDto getElectionAnalysis(Integer electionId) {
-        // TODO Implement method
-        return null;
+    public ElectionAnalysis getElectionAnalysis(Integer electionId) {
+        var election = electionRepository.findById(electionId);
+        if (election.isEmpty()) {
+            return null;
+        }
+        var electionResultList = electionResultRepository.findAllByElectionId(electionId);
+        if (electionResultList == null || electionResultList.isEmpty()) {
+            return null;
+        }
+        return new ElectionAnalyzer().analyzeElection(election.get(), electionResultList);
     }
 
     public VoteDto addVote(VoteDto voteDto) {
