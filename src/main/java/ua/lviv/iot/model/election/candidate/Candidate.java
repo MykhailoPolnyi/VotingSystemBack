@@ -19,9 +19,9 @@ public class Candidate {
     @Column(nullable = false)
     private String name;
     private String description;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "election_id", nullable = false)
     private Election election;
-    @OneToMany(mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.REMOVE)
     private List<ElectionResult> electionResultAssociationList;
 }

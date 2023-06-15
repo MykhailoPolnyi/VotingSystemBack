@@ -5,9 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.lviv.iot.model.election.DetailedElectionDto;
-import ua.lviv.iot.model.election.ElectionAnalysisDto;
+import ua.lviv.iot.model.election.candidate.ElectionAnalysis;
 import ua.lviv.iot.model.election.ElectionDto;
-import ua.lviv.iot.model.election.result.ElectionResultDto;
 import ua.lviv.iot.security.SecurityUtils;
 import ua.lviv.iot.service.ElectionResultService;
 import ua.lviv.iot.service.ElectionService;
@@ -49,13 +48,13 @@ public class ElectionController {
     }
 
     @GetMapping(path = "/{id}/result")
-    public ResponseEntity<ElectionResultDto> getElectionResult(@PathVariable Integer id,
-                                                               @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
+    public ResponseEntity<ua.lviv.iot.model.election.result.ElectionResultDto> getElectionResult(@PathVariable Integer id,
+                                                                                                 @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
         var userCred = userService.getUserFromAuthToken(authToken);
         if (userCred == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        ElectionResultDto electionResult = electionResultService.getElectionResult(id, userCred.getId());
+        ua.lviv.iot.model.election.result.ElectionResultDto electionResult = electionResultService.getElectionResult(id, userCred.getId());
         if (electionResult != null) {
             return ResponseEntity.ok(electionResult);
         } else {
@@ -64,12 +63,12 @@ public class ElectionController {
     }
 
     @GetMapping(path = "/{id}/analysis")
-    public ResponseEntity<ElectionAnalysisDto> getElectionAnalysis(@PathVariable Integer id,
-                                                                   @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
+    public ResponseEntity<ElectionAnalysis> getElectionAnalysis(@PathVariable Integer id,
+                                                                @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
         if (userService.getUserFromAuthToken(authToken) == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        ElectionAnalysisDto electionAnalysis = electionResultService.getElectionAnalysis(id);
+        ElectionAnalysis electionAnalysis = electionResultService.getElectionAnalysis(id);
         if (electionAnalysis != null) {
             return ResponseEntity.ok(electionAnalysis);
         } else {

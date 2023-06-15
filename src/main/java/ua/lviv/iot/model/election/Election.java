@@ -43,6 +43,6 @@ public class Election {
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private Admin admin;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "election")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "election")
     private List<Candidate> candidateAssociationList;
 }
