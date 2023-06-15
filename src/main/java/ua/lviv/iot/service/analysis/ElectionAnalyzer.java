@@ -37,6 +37,7 @@ public class ElectionAnalyzer {
     }
 
     private String receiveLocationNameForLocality(Address address, LocalityType locality) {
+        //get LocalityAddress
         switch (locality) {
             case CITY:
                 LocalityAddress cityLocalityAddress = new CityLocalityAddress();
