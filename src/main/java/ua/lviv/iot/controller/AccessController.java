@@ -18,7 +18,7 @@ import ua.lviv.iot.security.jwt.JwtUtils;
 import ua.lviv.iot.service.AdminService;
 import ua.lviv.iot.service.UserService;
 
-@CrossOrigin
+@CrossOrigin(origins ="*")
 @RestController
 @RequiredArgsConstructor
 public class AccessController {

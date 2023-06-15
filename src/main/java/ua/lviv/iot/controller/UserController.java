@@ -11,12 +11,13 @@ import ua.lviv.iot.security.jwt.JwtUtils;
 import ua.lviv.iot.service.UserService;
 
 
-@CrossOrigin
+@CrossOrigin(origins ="*")
 @RestController
 @RequestMapping(path = "/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {

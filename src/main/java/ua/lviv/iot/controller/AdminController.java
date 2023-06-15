@@ -14,7 +14,7 @@ import ua.lviv.iot.service.UserService;
 
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins ="*")
 @RestController
 @RequestMapping(path = "/election")
 @RequiredArgsConstructor
@@ -24,6 +24,7 @@ public class AdminController {
     private final ElectionService electionService;
     private final JwtUtils jwtUtils;
 
+    @CrossOrigin(origins ="*")
     @GetMapping(path = "/editable")
     public ResponseEntity<List<ElectionDto>> getEditableElectionList(@RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
         var userCred = userService.getUserFromAuthToken(authToken);
@@ -37,7 +38,7 @@ public class AdminController {
         return ResponseEntity.ok(createdElections);
     }
 
-
+    @CrossOrigin(origins ="*")
     @PostMapping
     public ResponseEntity<DetailedElectionDto> createElection(@RequestBody DetailedElectionDto electionDto,
                                                               @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
@@ -48,6 +49,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdElection);
     }
 
+    @CrossOrigin(origins ="*")
     @PutMapping("/{electionId}")
     public ResponseEntity<DetailedElectionDto> editElection(@RequestBody DetailedElectionDto electionDto,
                                                             @PathVariable Integer electionId,
@@ -76,6 +78,7 @@ public class AdminController {
         }
     }
 
+    @CrossOrigin(origins ="*")
     @DeleteMapping(path = "/{electionId}")
     public ResponseEntity<?> deleteElectionById(@PathVariable Integer electionId,
                                                 @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
