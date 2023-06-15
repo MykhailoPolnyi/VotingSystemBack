@@ -41,15 +41,12 @@ public class ElectionAnalyzer {
             case CITY:
                 LocalityAddress cityLocalityAddress = new CityLocalityAddress();
                 return cityLocalityAddress.getLocationName(address);
-//                return address.getDistrict();
             case STATE:
                 LocalityAddress stateLocalityAddress = new StateLocalityAddress();
                 return stateLocalityAddress.getLocationName(address);
-//                return address.getCity();
             case NATIONAL:
                 LocalityAddress nationalLocalityAddress = new NationalLocalityAddress();
                 return nationalLocalityAddress.getLocationName(address);
-//                return address.getState();
             default:
                 return null;
         }
