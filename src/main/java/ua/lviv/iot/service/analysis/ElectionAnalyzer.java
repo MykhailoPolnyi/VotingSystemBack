@@ -10,6 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ElectionAnalyzer {
+    private LocalityAddress localityAddressStrategy;
+
+    public ElectionAnalyzer(LocalityAddress strategy) {
+        this.localityAddressStrategy = strategy;
+    }
     public ElectionAnalysis analyzeElection(Election election, List<ElectionResult> results) {
         var analysis = new ElectionAnalysis();
         for (ElectionResult vote : results) {
@@ -37,18 +42,6 @@ public class ElectionAnalyzer {
     }
 
     private String receiveLocationNameForLocality(Address address, LocalityType locality) {
-        switch (locality) {
-            case CITY:
-                LocalityAddress cityLocalityAddress = new CityLocalityAddress();
-                return cityLocalityAddress.getLocationName(address);
-            case STATE:
-                LocalityAddress stateLocalityAddress = new StateLocalityAddress();
-                return stateLocalityAddress.getLocationName(address);
-            case NATIONAL:
-                LocalityAddress nationalLocalityAddress = new NationalLocalityAddress();
-                return nationalLocalityAddress.getLocationName(address);
-            default:
-                return null;
-        }
+        return localityAddressStrategy.getLocationName(address, locality);
     }
 }

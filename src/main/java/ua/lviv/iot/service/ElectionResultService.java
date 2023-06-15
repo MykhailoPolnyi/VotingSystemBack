@@ -14,7 +14,10 @@ import ua.lviv.iot.repository.CandidateRepository;
 import ua.lviv.iot.repository.ElectionRepository;
 import ua.lviv.iot.repository.ElectionResultRepository;
 import ua.lviv.iot.repository.UserRepository;
+import ua.lviv.iot.service.analysis.CityLocalityAddress;
 import ua.lviv.iot.service.analysis.ElectionAnalyzer;
+import ua.lviv.iot.service.analysis.NationalLocalityAddress;
+import ua.lviv.iot.service.analysis.StateLocalityAddress;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,7 +46,24 @@ public class ElectionResultService {
         if (electionResultList == null || electionResultList.isEmpty()) {
             return null;
         }
-        return new ElectionAnalyzer().analyzeElection(election.get(), electionResultList);
+
+        ElectionAnalyzer analyzer;
+
+        switch (election.get().getLocalityType()) {
+            case CITY:
+                analyzer = new ElectionAnalyzer(new CityLocalityAddress());
+                break;
+            case STATE:
+                analyzer = new ElectionAnalyzer(new StateLocalityAddress());
+                break;
+            case NATIONAL:
+                analyzer = new ElectionAnalyzer(new NationalLocalityAddress());
+                break;
+            default:
+                return null;
+        }
+
+        return analyzer.analyzeElection(election.get(), electionResultList);
     }
 
     public VoteDto addVote(VoteDto voteDto) {
