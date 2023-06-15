@@ -14,7 +14,7 @@ import ua.lviv.iot.service.UserService;
 
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins ="*")
 @RestController
 @RequestMapping(path = "/election")
 @RequiredArgsConstructor
@@ -23,6 +23,7 @@ public class ElectionController {
     private final ElectionResultService electionResultService;
     private final UserService userService;
 
+    @CrossOrigin(origins ="*")
     @GetMapping
     public ResponseEntity<List<ElectionDto>> getAllElectionList(@RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
         if (userService.getUserFromAuthToken(authToken) == null) {
@@ -32,6 +33,7 @@ public class ElectionController {
         return ResponseEntity.ok(electionList);
     }
 
+    @CrossOrigin(origins ="*")
     @GetMapping(path = "/{id}")
     public ResponseEntity<DetailedElectionDto> getElectionById(@PathVariable Integer id,
                                                                @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
@@ -47,6 +49,7 @@ public class ElectionController {
         }
     }
 
+    @CrossOrigin(origins ="*")
     @GetMapping(path = "/{id}/result")
     public ResponseEntity<ua.lviv.iot.model.election.result.ElectionResultDto> getElectionResult(@PathVariable Integer id,
                                                                                                  @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {
@@ -62,6 +65,7 @@ public class ElectionController {
         }
     }
 
+    @CrossOrigin(origins ="*")
     @GetMapping(path = "/{id}/analysis")
     public ResponseEntity<ElectionAnalysis> getElectionAnalysis(@PathVariable Integer id,
                                                                 @RequestHeader(name = SecurityUtils.AUTH_HEADER) String authToken) {

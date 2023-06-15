@@ -9,7 +9,7 @@ import ua.lviv.iot.security.SecurityUtils;
 import ua.lviv.iot.service.ElectionResultService;
 import ua.lviv.iot.service.UserService;
 
-@CrossOrigin
+@CrossOrigin(origins ="*")
 @RestController
 @RequestMapping(path = "/vote")
 @RequiredArgsConstructor
