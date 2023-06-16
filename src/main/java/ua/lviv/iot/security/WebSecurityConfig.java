@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.cors.CorsUtils;
 import ua.lviv.iot.security.jwt.AuthEntryPoint;
 import ua.lviv.iot.security.jwt.AuthTokenFilter;
 import ua.lviv.iot.service.UserService;
@@ -58,8 +59,10 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
+                        .requestMatchers(METHOD_MATCHER).permitAll()
                         .requestMatchers(SIGN_MATCHER).permitAll()
                         .requestMatchers(SWAGGER_MATCHER).permitAll()
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers().permitAll().anyRequest().authenticated()
                 );
 
@@ -75,9 +78,12 @@ public class WebSecurityConfig {
 
     private final RequestMatcher SWAGGER_MATCHER =
             request -> request.getServletPath().startsWith(SWAGGER_PATH) || request.getServletPath().startsWith(API_PATH);
+    private static final RequestMatcher METHOD_MATCHER =
+            request -> request.getMethod().equals("HEAD");
 
     private static final String SIGN_IN_PATH = "/signin";
     private static final String SIGN_UP_PATH = "/signup";
     private static final String SWAGGER_PATH = "/swagger";
     private static final String API_PATH = "/v2/api-docs";
+
 }
