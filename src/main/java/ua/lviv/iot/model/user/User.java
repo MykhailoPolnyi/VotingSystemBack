@@ -33,7 +33,7 @@ public class User {
     protected LocalDate birthDate;
     @Enumerated(EnumType.ORDINAL)
     protected Sex sex;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, name = "address_id")
     protected Address address;
     @OneToMany(mappedBy = "elector")

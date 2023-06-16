@@ -13,8 +13,7 @@ import java.util.List;
 public interface ElectionResultRepository extends JpaRepository<ElectionResult, ElectionResultId> {
     @Query(value = "SELECT SUM(er.voteNumber) " +
             "FROM ElectionResult er " +
-            "WHERE er.candidate.election.id = :electionId " +
-            "GROUP BY er.candidate.id")
+            "WHERE er.candidate.election.id = :electionId")
     Integer countVoteByElectionId(@Param("electionId") Integer electionId);
 
     @Query(value = "SELECT er FROM ElectionResult er " +
